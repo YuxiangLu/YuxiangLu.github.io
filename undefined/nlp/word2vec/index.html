@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="nlp,word2vec," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="使用word2vec训练词向量将词转换为向量是目前自然语言处理的基本流程之一。词向量有好几种，本文主要讲述如何利用word2vec将中文词训练为分布式词向量。 语料准备本文使用维基百科文章作为训练语料。使用wget命令下载。 1wget https://dumps.wikimedia.org/zhwiki/latest/zhwiki-latest-pages-articles.xml.bz2 下载">
+<meta name="keywords" content="nlp,word2vec">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用word2vec训练词向量">
+<meta property="og:url" content="https://yuxianglu.github.io/undefined/nlp/word2vec/index.html">
+<meta property="og:site_name" content="Yuxiang Coding">
+<meta property="og:description" content="使用word2vec训练词向量将词转换为向量是目前自然语言处理的基本流程之一。词向量有好几种，本文主要讲述如何利用word2vec将中文词训练为分布式词向量。 语料准备本文使用维基百科文章作为训练语料。使用wget命令下载。 1wget https://dumps.wikimedia.org/zhwiki/latest/zhwiki-latest-pages-articles.xml.bz2 下载">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://yuxianglu.github.io/undefined/nlp/word2vec/wiki_txt.png">
+<meta property="og:image" content="https://yuxianglu.github.io/undefined/nlp/word2vec/wiki_seg.png">
+<meta property="og:updated_time" content="2018-01-25T09:00:04.525Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用word2vec训练词向量">
+<meta name="twitter:description" content="使用word2vec训练词向量将词转换为向量是目前自然语言处理的基本流程之一。词向量有好几种，本文主要讲述如何利用word2vec将中文词训练为分布式词向量。 语料准备本文使用维基百科文章作为训练语料。使用wget命令下载。 1wget https://dumps.wikimedia.org/zhwiki/latest/zhwiki-latest-pages-articles.xml.bz2 下载">
+<meta name="twitter:image" content="https://yuxianglu.github.io/undefined/nlp/word2vec/wiki_txt.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://yuxianglu.github.io/undefined/nlp/word2vec/"/>
+
+
+
+
+
+  <title>使用word2vec训练词向量 | Yuxiang Coding</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Yuxiang Coding</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://yuxianglu.github.io/undefined/nlp/word2vec/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yuxiang Lu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yuxiang Coding">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">使用word2vec训练词向量</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-20T15:00:03+08:00">
+                2018-01-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/nlp/" itemprop="url" rel="index">
+                    <span itemprop="name">nlp</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="使用word2vec训练词向量"><a href="#使用word2vec训练词向量" class="headerlink" title="使用word2vec训练词向量"></a>使用word2vec训练词向量</h1><p>将词转换为向量是目前自然语言处理的基本流程之一。词向量有好几种，本文主要讲述如何利用word2vec将中文词训练为分布式词向量。</p>
+<h2 id="语料准备"><a href="#语料准备" class="headerlink" title="语料准备"></a>语料准备</h2><p>本文使用维基百科文章作为训练语料。使用wget命令下载。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https://dumps.wikimedia.org/zhwiki/latest/zhwiki-latest-pages-articles.xml.bz2</span><br></pre></td></tr></table></figure>
+<p>下载完成后，应该得到一个名为  <strong>zhwiki-latest-pages-articles.xml.bz2</strong> 的文件。</p>
+<p>这个文件是无法直接使用的，需要将其转换为文本，使用python中的<strong>gensim</strong>模块的<strong>WikiCorpus</strong>函数处理，完整代码如下：</p>
+<p><strong><em>\</em> wiki_to_txt.py*</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="keyword">import</span> logging</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line">reload(sys)</span><br><span class="line">sys.setdefaultencoding(<span class="string">'utf-8'</span>)</span><br><span class="line"><span class="keyword">import</span> io</span><br><span class="line"><span class="keyword">from</span> gensim.corpora <span class="keyword">import</span> WikiCorpus</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">if</span> len(sys.argv) != <span class="number">2</span>:</span><br><span class="line">        print(<span class="string">"Usage: python3 "</span> + sys.argv[<span class="number">0</span>] + <span class="string">" wiki_data_path"</span>)</span><br><span class="line">        exit()</span><br><span class="line"></span><br><span class="line">    logging.basicConfig(format=<span class="string">'%(asctime)s : %(levelname)s : %(message)s'</span>, level=logging.INFO)</span><br><span class="line">    wiki_corpus = WikiCorpus(sys.argv[<span class="number">1</span>], dictionary=&#123;&#125;)</span><br><span class="line">    texts_num = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">with</span> io.open(<span class="string">"wiki_texts.txt"</span>, <span class="string">'w'</span>, encoding=<span class="string">'utf-8'</span>) <span class="keyword">as</span> output:</span><br><span class="line">        <span class="keyword">for</span> text <span class="keyword">in</span> wiki_corpus.get_texts():</span><br><span class="line">            output.write(<span class="string">b' '</span>.join(text).decode(<span class="string">'utf-8'</span>) + <span class="string">'\n'</span>)</span><br><span class="line">            texts_num += <span class="number">1</span></span><br><span class="line">            <span class="keyword">if</span> texts_num % <span class="number">10000</span> == <span class="number">0</span>:</span><br><span class="line">                logging.info(<span class="string">"已处理 %d 篇文章"</span> % texts_num)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure>
+<p>执行：<code>pyhton wiki_to_txt.py zhwiki-latest-pages-articles.xml.bz2</code>进行处理。</p>
+<p>处理结束后得到一个wiki_texts.txt文件。</p>
+<p>查看一下这个文件：</p>
+<img src="/undefined/nlp/word2vec/wiki_txt.png">
+<p>发现文章是繁体字（应该是数据集下错了？），没关系，多加一步将繁体转换为中文：</p>
+<p>首先，下载两个python文件：[zh_wiki.py][<a href="https://github.com/csdz/nstools/blob/master/zhtools/zh_wiki.py]和[langconv.py][https://github.com/csdz/nstools/blob/master/zhtools/langconv.py]。" target="_blank" rel="noopener">https://github.com/csdz/nstools/blob/master/zhtools/zh_wiki.py]和[langconv.py][https://github.com/csdz/nstools/blob/master/zhtools/langconv.py]。</a></p>
+<p><strong><em>\</em> t2s.py*</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="keyword">from</span> langconv <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">t2s</span><span class="params">(line)</span>:</span></span><br><span class="line">    line = Converter(<span class="string">'zh-hans'</span>).convert(line.decode(<span class="string">'utf-8'</span>))</span><br><span class="line">    line = line.encode(<span class="string">'utf-8'</span>)</span><br><span class="line">    <span class="keyword">return</span> line</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    <span class="keyword">with</span> open(<span class="string">'wiki_texts.txt'</span>, <span class="string">'r'</span>) <span class="keyword">as</span> r:</span><br><span class="line">        <span class="keyword">with</span> open(<span class="string">'wiki_zhs.txt'</span>, <span class="string">'w'</span>) <span class="keyword">as</span> w:</span><br><span class="line">            lines = r.readlines()</span><br><span class="line">            <span class="keyword">print</span> <span class="string">'start'</span></span><br><span class="line">            <span class="keyword">for</span> line <span class="keyword">in</span> lines:</span><br><span class="line">                w.write(t2s(line.rstrip() + <span class="string">'\n'</span>))</span><br></pre></td></tr></table></figure>
+<p><code>python t2s.py</code>运行这个文件后得到简体中文的wiki数据集。处理结果存放在wiki_zhs.txt中。</p>
+<h2 id="分词和去除停止词"><a href="#分词和去除停止词" class="headerlink" title="分词和去除停止词"></a>分词和去除停止词</h2><p>使用 <strong>jieba</strong> 分词，在jieba_dict文件夹中的dict.txt.big文件可以自己定义一些想要分的词，在stopwords.txt中放入中文的停止词（可选）。完整代码如下：</p>
+<p><strong><em>\</em> segment.py*</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> jieba</span><br><span class="line"><span class="keyword">import</span> logging</span><br><span class="line"><span class="keyword">import</span> io</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line">reload(sys)</span><br><span class="line">sys.setdefaultencoding(<span class="string">'utf-8'</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span></span><br><span class="line">    logging.basicConfig(format=<span class="string">'%(asctime)s : %(levelname)s : %(message)s'</span>, level=logging.INFO)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># jieba custom setting.</span></span><br><span class="line">    jieba.set_dictionary(<span class="string">'jieba_dict/dict.txt.big'</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># load stopwords set</span></span><br><span class="line">    stopword_set = set()</span><br><span class="line">    <span class="keyword">with</span> io.open(<span class="string">'jieba_dict/stopwords.txt'</span>, <span class="string">'r'</span>, encoding=<span class="string">'utf-8'</span>) <span class="keyword">as</span> stopwords:</span><br><span class="line">        <span class="keyword">for</span> stopword <span class="keyword">in</span> stopwords:</span><br><span class="line">            stopword_set.add(stopword.strip(<span class="string">'\n'</span>))</span><br><span class="line"></span><br><span class="line">    output = io.open(<span class="string">'wiki_seg.txt'</span>, <span class="string">'w'</span>, encoding=<span class="string">'utf-8'</span>)</span><br><span class="line">    <span class="keyword">with</span> io.open(<span class="string">'wiki_zhs.txt'</span>, <span class="string">'r'</span>, encoding=<span class="string">'utf-8'</span>) <span class="keyword">as</span> content:</span><br><span class="line">        <span class="keyword">for</span> texts_num, line <span class="keyword">in</span> enumerate(content):</span><br><span class="line">            line = line.strip(<span class="string">'\n'</span>)</span><br><span class="line">            words = jieba.cut(line, cut_all=<span class="keyword">False</span>)</span><br><span class="line">            <span class="keyword">for</span> word <span class="keyword">in</span> words:</span><br><span class="line">                <span class="keyword">if</span> word <span class="keyword">not</span> <span class="keyword">in</span> stopword_set:</span><br><span class="line">                    output.write(word + <span class="string">' '</span>)</span><br><span class="line">            output.write(unicode(<span class="string">'\n'</span>))</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (texts_num + <span class="number">1</span>) % <span class="number">10000</span> == <span class="number">0</span>:</span><br><span class="line">                logging.info(<span class="string">"已完成前 %d 行的断词"</span> % (texts_num + <span class="number">1</span>))</span><br><span class="line">    output.close()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure>
+<p>处理结果存放在wiki_seg.txt中，如下图：</p>
+<img src="/undefined/nlp/word2vec/wiki_seg.png">
+<h2 id="训练词向量"><a href="#训练词向量" class="headerlink" title="训练词向量"></a>训练词向量</h2><p>主要使用 <strong>gensim</strong> 中的 <strong>word2vec</strong> 训练词向量，完整代码如下：</p>
+<p><strong><em>\</em> train.py*</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> logging</span><br><span class="line"><span class="keyword">from</span> gensim.models <span class="keyword">import</span> word2vec</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span></span><br><span class="line">    logging.basicConfig(format=<span class="string">'%(asctime)s : %(levelname)s : %(message)s'</span>, level=logging.INFO)</span><br><span class="line">    sentences = word2vec.LineSentence(<span class="string">"wiki_seg.txt"</span>)</span><br><span class="line">    model = word2vec.Word2Vec(sentences, size=<span class="number">250</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 保存模型，供日后使用</span></span><br><span class="line">    model.save(<span class="string">u"word2vec.model"</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 模型读取方式</span></span><br><span class="line">    <span class="comment"># model = word2vec.Word2Vec.load("your_model_name")</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure>
+<p>训练结果存储在word2vec.model中。</p>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p>这里提供3种word2vec的测试场景：（1）一个词的相似词；（2）两个词的相似词；（3）类比推理。</p>
+<p>完整代码如下：</p>
+<p><strong><em>\</em> demo.py*</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> gensim.models <span class="keyword">import</span> word2vec</span><br><span class="line"><span class="keyword">from</span> gensim <span class="keyword">import</span> models</span><br><span class="line"><span class="keyword">import</span> logging</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span></span><br><span class="line">    logging.basicConfig(format=<span class="string">'%(asctime)s : %(levelname)s : %(message)s'</span>, level=logging.INFO)</span><br><span class="line">    model = models.Word2Vec.load(<span class="string">'word2vec.model'</span>)</span><br><span class="line"></span><br><span class="line">    print(<span class="string">"提供 3 种测试模式"</span>)</span><br><span class="line">    print(<span class="string">"输入一个词，则去寻找前一百个该词的相似詞"</span>)</span><br><span class="line">    print(<span class="string">"输入两个词，则去计算两个词的余弦相似度"</span>)</span><br><span class="line">    print(<span class="string">"输入三个词，进行类比推理"</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">        query = raw_input(<span class="string">"请输入: "</span>)</span><br><span class="line">        query = query.decode(<span class="string">'utf-8'</span>)</span><br><span class="line">        q_list = query.split()</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            <span class="keyword">if</span> len(q_list) == <span class="number">1</span>:</span><br><span class="line">                print(<span class="string">"相似词前 100 排序"</span>)</span><br><span class="line">                res = model.most_similar(q_list[<span class="number">0</span>], topn=<span class="number">100</span>)</span><br><span class="line">                <span class="keyword">for</span> item <span class="keyword">in</span> res:</span><br><span class="line">                    print(item[<span class="number">0</span>] + <span class="string">","</span> + str(item[<span class="number">1</span>]))</span><br><span class="line"></span><br><span class="line">            <span class="keyword">elif</span> len(q_list) == <span class="number">2</span>:</span><br><span class="line">                print(<span class="string">"计算 Cosine 相似度"</span>)</span><br><span class="line">                res = model.similarity(q_list[<span class="number">0</span>], q_list[<span class="number">1</span>])</span><br><span class="line">                print(res)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                print(<span class="string">"%s之于%s，如%s之于"</span> % (q_list[<span class="number">0</span>], q_list[<span class="number">2</span>], q_list[<span class="number">1</span>]))</span><br><span class="line">                res = model.most_similar([q_list[<span class="number">0</span>], q_list[<span class="number">1</span>]], [q_list[<span class="number">2</span>]], topn=<span class="number">100</span>)</span><br><span class="line">                <span class="keyword">for</span> item <span class="keyword">in</span> res:</span><br><span class="line">                    print(item[<span class="number">0</span>] + <span class="string">","</span> + str(item[<span class="number">1</span>]))</span><br><span class="line">            print(<span class="string">"----------------------------"</span>)</span><br><span class="line">        <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">            print(repr(e))</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/nlp/" rel="tag"># nlp</a>
+          
+            <a href="/tags/word2vec/" rel="tag"># word2vec</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/undefined/mac/zsh/" rel="next" title="在mac上鼓捣终端">
+                <i class="fa fa-chevron-left"></i> 在mac上鼓捣终端
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/undefined/hello-world/" rel="prev" title="Hello World">
+                Hello World <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Yuxiang Lu</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#使用word2vec训练词向量"><span class="nav-number">1.</span> <span class="nav-text">使用word2vec训练词向量</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#语料准备"><span class="nav-number">1.1.</span> <span class="nav-text">语料准备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分词和去除停止词"><span class="nav-number">1.2.</span> <span class="nav-text">分词和去除停止词</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#训练词向量"><span class="nav-number">1.3.</span> <span class="nav-text">训练词向量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用"><span class="nav-number">1.4.</span> <span class="nav-text">使用</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yuxiang Lu</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

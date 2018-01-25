@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="mac,terminal,zsh," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="在mac上鼓捣终端好看+好用  iTerm2mac必备，官网地址：http://iterm2.org/，或点击[直接下载][https://iterm2.com/downloads/stable/latest]。 安装zsh一般mac会自带zsh，在命令行输入：zsh —version产看版本。 或者直接安装：brew install zsh（[Homebrew][https://brew.sh/">
+<meta name="keywords" content="mac,terminal,zsh">
+<meta property="og:type" content="article">
+<meta property="og:title" content="在mac上鼓捣终端">
+<meta property="og:url" content="https://yuxianglu.github.io/undefined/mac/zsh/index.html">
+<meta property="og:site_name" content="Yuxiang Coding">
+<meta property="og:description" content="在mac上鼓捣终端好看+好用  iTerm2mac必备，官网地址：http://iterm2.org/，或点击[直接下载][https://iterm2.com/downloads/stable/latest]。 安装zsh一般mac会自带zsh，在命令行输入：zsh —version产看版本。 或者直接安装：brew install zsh（[Homebrew][https://brew.sh/">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://yuxianglu.github.io/undefined/mac/zsh/iterm2.png">
+<meta property="og:image" content="https://yuxianglu.github.io/undefined/mac/zsh/vim_theme.png">
+<meta property="og:updated_time" content="2018-01-25T08:50:40.282Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="在mac上鼓捣终端">
+<meta name="twitter:description" content="在mac上鼓捣终端好看+好用  iTerm2mac必备，官网地址：http://iterm2.org/，或点击[直接下载][https://iterm2.com/downloads/stable/latest]。 安装zsh一般mac会自带zsh，在命令行输入：zsh —version产看版本。 或者直接安装：brew install zsh（[Homebrew][https://brew.sh/">
+<meta name="twitter:image" content="https://yuxianglu.github.io/undefined/mac/zsh/iterm2.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://yuxianglu.github.io/undefined/mac/zsh/"/>
+
+
+
+
+
+  <title>在mac上鼓捣终端 | Yuxiang Coding</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Yuxiang Coding</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://yuxianglu.github.io/undefined/mac/zsh/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yuxiang Lu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yuxiang Coding">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">在mac上鼓捣终端</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-15T00:00:00+08:00">
+                2017-12-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/mac/" itemprop="url" rel="index">
+                    <span itemprop="name">mac</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="在mac上鼓捣终端"><a href="#在mac上鼓捣终端" class="headerlink" title="在mac上鼓捣终端"></a>在mac上鼓捣终端</h1><p>好看+好用</p>
+<img src="/undefined/mac/zsh/iterm2.png">
+<h2 id="iTerm2"><a href="#iTerm2" class="headerlink" title="iTerm2"></a>iTerm2</h2><p>mac必备，官网地址：<a href="http://iterm2.org/" target="_blank" rel="noopener">http://iterm2.org/</a>，或点击[直接下载][<a href="https://iterm2.com/downloads/stable/latest]。" target="_blank" rel="noopener">https://iterm2.com/downloads/stable/latest]。</a></p>
+<h2 id="安装zsh"><a href="#安装zsh" class="headerlink" title="安装zsh"></a>安装zsh</h2><p>一般mac会自带zsh，在命令行输入：<code>zsh —version</code>产看版本。</p>
+<p>或者直接安装：<code>brew install zsh</code>（[Homebrew][<a href="https://brew.sh/]是mac的安装器）。" target="_blank" rel="noopener">https://brew.sh/]是mac的安装器）。</a></p>
+<p>使zsh成为默认的shell：命令行输入<code>chsh -s zsh</code>，重启你的iTerm2。</p>
+<h2 id="安装Oh-My-Zsh"><a href="#安装Oh-My-Zsh" class="headerlink" title="安装Oh My Zsh"></a>安装Oh My Zsh</h2><p>通过wget安装，首先也要安装wget：<code>brew install wget</code></p>
+<p>在命令行输入：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sh -c "$(wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"</span><br></pre></td></tr></table></figure>
+<h2 id="主题"><a href="#主题" class="headerlink" title="主题"></a>主题</h2><p>oh my zsh自带各种主题，放在<code>~/.oh-my-zsh/themes/</code>文件夹下。</p>
+<p>通过<code>vi ~/.zshrc</code>修改其中<code>ZSH_THEME</code>为你喜欢的主题（我比较喜欢默认主题）。</p>
+<p>为你的vim安装<em>Solarized</em>或者<em>Tomorrow</em>主题：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> git下载Solarized源码</span><br><span class="line">git clone git://github.com/altercation/solarized.git</span><br><span class="line"><span class="meta">#</span> 进入刚刚下载好的目录</span><br><span class="line">cd solarized/vim-colors-solarized/colors</span><br><span class="line"><span class="meta">#</span> 创建vim的配置文件夹</span><br><span class="line">sudo mkdir -p ~/.vim/colors</span><br><span class="line"><span class="meta">#</span> 把刚刚下载好的主题复制过去</span><br><span class="line">sudo cp solarized.vim ~/.vim/colors/</span><br><span class="line"><span class="meta">#</span> 创建.vimrc配置文件并修改</span><br><span class="line">sudo vim ~/.vimrc</span><br><span class="line"><span class="meta">#</span> 在.vimrc文件中加入以下几行</span><br><span class="line">syntax enable</span><br><span class="line">set background=dark</span><br><span class="line">colorscheme solarized</span><br></pre></td></tr></table></figure>
+<p>保存.vimrc。</p>
+<p>效果如下（不好意思，我用的是Tomorrow主题）：</p>
+<img src="/undefined/mac/zsh/vim_theme.png">
+<p>什么！？怎么没有行号？怎么设置tab键的长短？怎么设置文件表头？</p>
+<p>好吧，给你完整的.vimrc（为vim添加行号、设置tab、设置新建*.sh和*.py文件时的表头）：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">syntax on</span><br><span class="line">set background=dark</span><br><span class="line">colorscheme Tomorrow-Night-Eighties</span><br><span class="line">set nu!</span><br><span class="line">set tabstop=4</span><br><span class="line">set ai!</span><br><span class="line">set showmatch</span><br><span class="line">set vb t_vb=</span><br><span class="line">set autoindent</span><br><span class="line"></span><br><span class="line">autocmd BufNewFile *.py,*.sh, exec ":call SetTitle()"</span><br><span class="line">let $author_name = "Your Name"</span><br><span class="line">let $author_email = "Your E-mail"</span><br><span class="line"></span><br><span class="line">func SetTitle()</span><br><span class="line">	if &amp;filetype == 'sh'</span><br><span class="line">		call setline(1,"\#=======================================================    ================")</span><br><span class="line">		call append(line("."), "\# File Name: ".expand("%"))</span><br><span class="line">		call append(line(".")+1, "\# Author: ".$author_name)</span><br><span class="line">		call append(line(".")+2, "\# mail: ".$author_email)</span><br><span class="line">		call append(line(".")+3, "\# Created Time: ".strftime("%c"))</span><br><span class="line">		call append(line(".")+4, "\#=============================================    ================")</span><br><span class="line">  		call append(line(".")+5, "\#!/bin/zsh")</span><br><span class="line">		call append(line(".")+6, "")</span><br><span class="line">	else</span><br><span class="line">		call setline(1, "\# -*- coding: utf-8 -*-")</span><br><span class="line">		call append(line("."),"\"\"\"")</span><br><span class="line">		call append(line(".")+1, "\Created Time: ".strftime("%T %x"))</span><br><span class="line">		call append(line(".")+2, "")</span><br><span class="line">		call append(line(".")+3, "\Author: ".$author_name)</span><br><span class="line">		call append(line(".")+4, "\"\"\"")</span><br><span class="line">	endif</span><br><span class="line">endfunc</span><br></pre></td></tr></table></figure>
+<h2 id="插件"><a href="#插件" class="headerlink" title="插件"></a>插件</h2><p><strong>Oh My Zsh</strong>支持很多强大的插件，例如git、语法高亮、命令补全等（不过不要加太多的插件，否则会拖慢shell的启动）。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 下载zsh-syntax-highlighting插件</span><br><span class="line">cd ~/.oh-my-zsh/custom/plugins</span><br><span class="line">git clone git://github.com/zsh-users/zsh-syntax-highlighting.git</span><br><span class="line"><span class="meta">#</span> 打开.zshrc</span><br><span class="line">vi ~/.zshrc</span><br><span class="line"><span class="meta">#</span> 找到plugins，将你想要的插件添加进去，插件之间以空格隔开</span><br><span class="line">plugins=(zsh-syntax-highlighting zsh-autosuggestions git pip python)</span><br></pre></td></tr></table></figure>
+<p>保存.zshrc并退出，重启终端或者输入<code>source ~/.zshrc</code>或<code>zsh</code>使配置文件生效。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/mac/" rel="tag"># mac</a>
+          
+            <a href="/tags/terminal/" rel="tag"># terminal</a>
+          
+            <a href="/tags/zsh/" rel="tag"># zsh</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/undefined/nlp/word2vec/" rel="prev" title="使用word2vec训练词向量">
+                使用word2vec训练词向量 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Yuxiang Lu</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#在mac上鼓捣终端"><span class="nav-number">1.</span> <span class="nav-text">在mac上鼓捣终端</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#iTerm2"><span class="nav-number">1.1.</span> <span class="nav-text">iTerm2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装zsh"><span class="nav-number">1.2.</span> <span class="nav-text">安装zsh</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装Oh-My-Zsh"><span class="nav-number">1.3.</span> <span class="nav-text">安装Oh My Zsh</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#主题"><span class="nav-number">1.4.</span> <span class="nav-text">主题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#插件"><span class="nav-number">1.5.</span> <span class="nav-text">插件</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yuxiang Lu</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
