@@ -539,6 +539,189 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://yuxianglu.github.io/undefined/nlp/dialogue_system_review/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yuxiang Lu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yuxiang Coding">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/undefined/nlp/dialogue_system_review/" itemprop="url">对话系统综述</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-19T19:40:00+08:00">
+                2018-01-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/nlp/" itemprop="url" rel="index">
+                    <span itemprop="name">nlp</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>本文主要是对论文：<a href="https://arxiv.org/abs/1711.01731" target="_blank" rel="noopener">A Survey on Dialogue Systems: Recent Advances and New Frontiers</a> 的理解和翻译。下文中提及的参考文献编号，均可从原论文中找到对应的文献。</p>
+<h2 id="综述"><a href="#综述" class="headerlink" title="综述"></a>综述</h2><p>目前，从应用的角度看，对话系统大致可以分为两类：</p>
+<ul>
+<li>task-oriented systems（任务型）</li>
+<li>non-task-oriented systems（闲聊型）</li>
+</ul>
+<p>任务型系统主要帮助人们完成确定的任务（例如，订票）。之前广泛应用的方法流程如Figure 1。系统先理解用户的话（nature language understanding，NLU），将其表示成系统可以理解的状态，然后根据策略采取一些action，最后根据这些action转换成自然语言（nature language generating，NLG）回复。这里的NLU使用统计模型来处理。可靠的对话系统仍使用人工特征和规则来表示状态和策略、检测意图等，使得实际使用中的对话系统成本很高，而且很难被用于其他领域。</p>
+<p><img src="http://wx3.sinaimg.cn/mw690/71cd66b9ly1fnveptvt51j20ix0a0gnr.jpg" alt="figure1"></p>
+<p>最近，很多深度学习算法通过学习高维的分布式特征表示来解决这些问题。聊天型对话系统主要使用了这两种模型：</p>
+<ul>
+<li>生成模型（generative methods），例如：Seq2Seq model；</li>
+<li>检索模型（retrieval-based methods），学习从已有库中选择当前对话对应的回答。</li>
+</ul>
+<h2 id="任务型对话系统"><a href="#任务型对话系统" class="headerlink" title="任务型对话系统"></a>任务型对话系统</h2><p>任务型对话系统主要可以分为两类：</p>
+<ul>
+<li>管道型（pipeline）</li>
+<li>端到端型（end-to-end）</li>
+</ul>
+<h3 id="管道型（Pipeline-Methods）"><a href="#管道型（Pipeline-Methods）" class="headerlink" title="管道型（Pipeline Methods）"></a>管道型（Pipeline Methods）</h3><p>管道型对话系统主要包含4个部分：</p>
+<ul>
+<li>自然语言理解（NLU）</li>
+<li>对话状态追踪器（dialogue state tracking）</li>
+<li>策略网络（policy learning）</li>
+<li>自然语言生成（NLG）</li>
+</ul>
+<h4 id="自然语言理解"><a href="#自然语言理解" class="headerlink" title="自然语言理解"></a>自然语言理解</h4><p>NLU模块对自然语言进行意图识别和信息抽取，添加到对应的语义槽（semantic slots）。识别意图就是将用户的话语分类到预定义好的类别中。<code>[15，84，112]</code>使用了<strong>深度学习</strong>进行意图识别。<code>[25，29，74]</code>使用了<strong>CNN</strong>进行分类。类似的方法同样适用于类别和领域的分类。槽填充（slot filling）是将用户的话中的词打上语义标签（例如，日期、地点等）：<code>[15,17]</code>使用了<strong>深度信念网络（DBNs）</strong>，<code>[51，66,115,113]</code>使用了<strong>RNN</strong>。NLU的结果（intent和slot）会进一步被对话管理器（dialogue management component）进行处理（对话管理器主要包括对话状态追踪器和策略网络）。</p>
+<h4 id="对话状态追踪器"><a href="#对话状态追踪器" class="headerlink" title="对话状态追踪器"></a>对话状态追踪器</h4><p>在每一轮对话中估计用户的目标。常用的state结构是slot filling或semantic frame。传统方法是使用人工定义的规则来选择最有可能的结果<code>[23]</code>。最近，<code>[26]</code>提出了单领域的，基于深度学习的belief tracking；<code>[58]</code>提出了基于RNN，多领域的tracking模型；<code>[59]</code>提出了neural belief tracker（NBT）来检测slot-value pairs。</p>
+<h4 id="策略网络"><a href="#策略网络" class="headerlink" title="策略网络"></a>策略网络</h4><p>基于状态的表示，policy learning用来生成系统的下一步action。可以使用监督学习和强化学习。<code>[14]</code>使用了<strong>深度强化学习</strong>，得到了很好的表现。</p>
+<h4 id="自然语言生成"><a href="#自然语言生成" class="headerlink" title="自然语言生成"></a>自然语言生成</h4><p>根据action生成自然语言。<code>[83,94,95,123]</code>使用了基于<strong>LSTM</strong>的神经网络模型。<code>[20]</code>提出了基于<strong>Seq2Seq</strong>方法的NLG，<code>[19]</code>扩展了<code>[20]</code>，使得模型能适应用户说话的方式，作出合适的回应。</p>
+<h3 id="端到端模型（End-to-End-Methods）"><a href="#端到端模型（End-to-End-Methods）" class="headerlink" title="端到端模型（End-to-End Methods）"></a>端到端模型（End-to-End Methods）</h3><p>基于Pipeline方法的系统，有很多在具体领域的人工设计，难以应用到其他领域，并且还有两点局限：一是用户的反馈难以传给模型，二是各个模块间相互依赖（一个模块的输出是另一个模块的输入），适应新环境时修改起来需要很多人力。<code>[7,97]</code>提出了基于神经网络的、端到端的、可训练的任务型对话系统，将对话系统的学习看作是一个从历史对话记录的匹配过程的学习，使用<strong>Encoder-Decoder模型</strong>来训练整个网络，缺点是监督学习需要大量数据，并且不够健壮。<code>[120]</code>首先提出了<strong>端到端的强化学习方法</strong>来训DM，优化系统的鲁棒性（系统问用户一系列Yes/No问题来确定答案）。<code>[45]</code>将端到端系统训练为task completion neural dialogue，最终目的是完成一项任务，例如，订电影票。</p>
+<p>任务型对话系统通常需要查询外部的知识库。先前的系统一般会发出一次符号查询来获得结果<code>[97,103,45]</code>。<code>[21]</code>使用基于<strong>注意力模型（attention）</strong>、键值对的检索机制来增强现有循环网络架构。<code>[18]</code>提出了在知识库上的“soft”posteriordistribution来推断用户的兴趣点，取代了符号查询。<code>[102]</code>结合了<strong>RNN</strong>与领域知识编码的软件和系统action模版。</p>
+<h2 id="闲聊型对话系统"><a href="#闲聊型对话系统" class="headerlink" title="闲聊型对话系统"></a>闲聊型对话系统</h2><h3 id="基于神经网络的生成模型"><a href="#基于神经网络的生成模型" class="headerlink" title="基于神经网络的生成模型"></a>基于神经网络的生成模型</h3><p><code>[64]</code>提出了（基于phrase-based Statistical Machine Translation<code>[118]</code>的）<strong>概率生成模型</strong>，将应答生成看作翻译，但效果不好。随着深度学习在翻译中的应用（Neural Machine Translation）获得成功，激励了在神经网络中生成对话系统的研究。</p>
+<h4 id="Sequence-to-Sequence-Models"><a href="#Sequence-to-Sequence-Models" class="headerlink" title="Sequence-to-Sequence Models"></a>Sequence-to-Sequence Models</h4><p>主要使用Encoder-Decoder结构，输入X，输出Y。得到中间状态的非线性函数可以是<strong>LSTM</strong><code>[27]</code>或<strong>GRU</strong>（gated recurrent unit）<code>[12]</code>。<code>[5]</code>使用了<strong>attention机制</strong>提高了性能。<code>[71,12,87,50]</code>使用了<strong>RNN</strong>的Encoder-Decoder或类似的结构。</p>
+<p><img src="http://wx1.sinaimg.cn/mw690/71cd66b9ly1fnvepxprzpj20ji0j5wih.jpg" alt="figure2"></p>
+<h4 id="对话上下文（context）"><a href="#对话上下文（context）" class="headerlink" title="对话上下文（context）"></a>对话上下文（context）</h4><p>考虑对话的上下文的能力是建立对话系统的关键。<code>[77]</code>通过连续表示（<strong>continuous representation</strong>）来表示历史对话记录（包括当前信息），解决了基于上下文的应答生成问题。<code>[52,12]</code>使用了RNN作为decoder，<code>[68]</code>使用了<strong>层次（hierarchical）</strong>方法,先捕获用户话语的意思，然后将它们合成一句论述。<code>[109]</code>分别使用词和句层面的<strong>注意力（attention）机制</strong>扩展了hierarchical结构。<code>[82]</code>对比现有方法发现：（1）hierarchical RNN普遍比non-hierarchical性能好，（2）基于上下文信息，神经网络倾向于生成更长更有意义而且多样性的应答。</p>
+<p>=============================</p>
+<p>未完待续。。。</p>
+<h4 id="应答多样性"><a href="#应答多样性" class="headerlink" title="应答多样性"></a>应答多样性</h4><p><code>[77,87,68,38,6,9,114,65,42,86,72,42,38,77,72,57,11,34,33,75,69,68,67,73]</code></p>
+<h4 id="主题及个性化"><a href="#主题及个性化" class="headerlink" title="主题及个性化"></a>主题及个性化</h4><p><code>[108,107,13,122,3,86,61,39,119,55]</code></p>
+<h4 id="外部知识库"><a href="#外部知识库" class="headerlink" title="外部知识库"></a>外部知识库</h4><p><code>[22,88,116]</code></p>
+<h4 id="交互性对话学习"><a href="#交互性对话学习" class="headerlink" title="交互性对话学习"></a>交互性对话学习</h4><p><code>[43,1,104,40,4,41,37]</code></p>
+<h4 id="评价"><a href="#评价" class="headerlink" title="评价"></a>评价</h4><p><code>[46,89,56,31,2,46,53,80,47,81,85,32,10,8,44,24,16]</code></p>
+<h3 id="检索模型（Retrieval-base-Methods）"><a href="#检索模型（Retrieval-base-Methods）" class="headerlink" title="检索模型（Retrieval-base Methods）"></a>检索模型（Retrieval-base Methods）</h3><h4 id="单轮对话"><a href="#单轮对话" class="headerlink" title="单轮对话"></a>单轮对话</h4><h4 id="多轮对话"><a href="#多轮对话" class="headerlink" title="多轮对话"></a>多轮对话</h4><h4 id="融合方法"><a href="#融合方法" class="headerlink" title="融合方法"></a>融合方法</h4><h2 id="讨论与总结"><a href="#讨论与总结" class="headerlink" title="讨论与总结"></a>讨论与总结</h2>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://yuxianglu.github.io/undefined/mac/zsh/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -735,7 +918,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-count">4</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -757,7 +940,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-count">6</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
